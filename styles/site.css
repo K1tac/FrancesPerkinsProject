@@ -102,6 +102,11 @@ input[type="checkbox"] {
     font-style: italic;
 }
 
+.red-info {
+    color: #d63838;
+    font-weight: bold;
+}
+
 .buttons {
     display: flex;
     flex-direction: column;
