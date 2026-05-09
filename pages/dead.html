@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dead</title>
+    <link rel="stylesheet" href="../styles/site.css">
+</head>
+<body>
+    <div class="card">
+        <div class="top">
+            <h1>Wuh oh!</h1>
+            <div class="line"></div>
+        </div>
+
+        <div class="box">
+            <p id="CauseofDeath">
+                death message loading...
+            </p>
+        </div>
+
+        <div class="buttons">
+            <button onclick="window.location.href='../main.html'">
+                Restart
+            </button>
+        </div>
+    </div>
+    <script>
+        var message = new URLSearchParams(window.location.search).get("message");
+
+        if (message) {
+            document.getElementById("CauseofDeath").textContent = message;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #1a1a1a;
+    color: #dddddd;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #cc2222;
+    font-family: Arial, sans-serif;
+    font-size: 32px;
+    text-transform: uppercase;
+    margin: 0 0 10px 0;
+}
+
+p {
+    line-height: 1.5;
+}
+
+a {
+    color: #ff5555;
+}
+
+code {
+    background-color: #444444;
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+
+button {
+    background-color: transparent;
+    color: #aaaaaa;
+    border: 0;
+    padding: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+button:hover {
+    color: white;
+}
+
+input {
+    background-color: #111111;
+    color: white;
+    border: 2px solid #444444;
+    padding: 10px;
+    width: 100%;
+}
+
+.card {
+    background-color: #222222;
+    border: 2px solid #333333;
+    border-radius: 10px;
+    max-width: 390px;
+    width: 100%;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 0 30px black;
+}
+
+.top {
+    margin-bottom: 25px;
+}
+
+.line {
+    width: 60px;
+    height: 4px;
+    background-color: #992222;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+.date {
+    color: #777777;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.box {
+    border-top: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    margin-bottom: 25px;
+    padding: 15px 5px;
+}
+
+.warning {
+    color: #d69b38;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.big-button {
+    background-color: #992222;
+    color: white;
+    border-radius: 6px;
+}
+
+.big-button:hover {
+    background-color: #bb2929;
+}
+
+.name-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.random-button {
+    border: 2px solid #444444;
+    background-color: #222222;
+    color: #dddddd;
+}
+
+.random-button:hover {
+    background-color: #333333;
+}
+
+.difficulty-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.difficulty-button {
+    border: 2px solid #444444;
+    background-color: #222222;
+    color: #dddddd;
+    width: 100%;
+}
+
+.difficulty-button:hover {
+    background-color: #333333;
+}
+
+.selected {
+    background-color: #992222;
+    color: white;
+}
+
+.quote {
+    position: fixed;
+    right: 20px;
+    bottom: 10px;
+    color: #555555;
+    font-family: Arial, sans-serif;
+    font-style: italic;
+}
+
+.python {
+    color: #d6b640;
+}
+
+.c-lang {
+    color: #3e7bd6;
+}
+
+.game-page {
+    display: block;
+    padding: 0;
+}
+
+.game-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-color: #111111;
+    border-bottom: 2px solid #333333;
+    padding: 15px;
+    font-family: Arial, sans-serif;
+    gap: 10px;
+}
+
+.game-nav div {
+    text-align: center;
+    min-width: 90px;
+}
+
+.game-nav span {
+    display: block;
+    color: #777777;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.game-nav b {
+    display: block;
+    color: #bbbbbb;
+    margin-top: 5px;
+}
+
+#stat-risk {
+    color: darkgreen;
+}
+
+#stamina {
+    color: #3e7bd6;
+}
+
+#air {
+    color: orange;
+}
+
+.game-main {
+    min-height: 300px;
+    border: 2px solid #333333;
+    margin: 40px auto;
+    width: 80%;
+    max-width: 800px;
+    padding: 25px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.game-main h2 {
+    color: #cc2222;
+    margin-top: 0;
+}
+
+.choice-button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    border: 2px solid #444444;
+    background-color: #222222;
+    color: #dddddd;
+    text-align: left;
+}
+
+.choice-button:hover {
+    background-color: #333333;
+}
+
+.small-text {
+    color: #999999;
+    font-size: 14px;
+}
+
+.survived {
+    border-color: #335533;
+}
+
+@media (max-width: 600px) {
+    .card {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    .quote {
+        display: none;
+    }
+}
