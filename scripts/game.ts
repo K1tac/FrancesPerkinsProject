@@ -574,6 +574,7 @@ function showStep(which: Step): void {
         addSmallText("The fire began on the eighth floor. The ninth floor had very little time.");
         addSmallText("Around you, workers are yelling in English, Yiddish, and Italian.");
         addSmallText("A lot of workers ended up at the windows because the stairs and elevators were blocked or too crowded.");
+        addSmallText("Your best interest is to get to the street or up on the roof.");
         addChoice("Go to the Washington Place stairs.", "lockedDoor", -25, "", -8, 0);
         addChoice("Run for the elevators.", "elevator", -10, "", -18, 20);
         addChoice("Follow the crowd to the windows.", "window", -30, "", -12, 0);
@@ -727,7 +728,7 @@ function showStep(which: Step): void {
         floorBox.textContent = "Street";
         airBox.textContent = "Outside";
         updateMap("Street", "Street");
-        survived("You made it outside. You are hurt and coughing, but alive.");
+        survived("You are one of the few who made it out. The rest of your colleagues are still inside.");
     }
 
     if (which === "dead") {
