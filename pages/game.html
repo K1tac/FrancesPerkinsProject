@@ -30,8 +30,36 @@
         </div>
     </nav>
 
-    <main class="game-main" id="game">
-    </main>
+    <div class="game-layout">
+        <main class="game-main" id="game">
+        </main>
+
+        <aside class="settings-bar">
+            <h2>Settings</h2>
+            <label>
+                <input type="checkbox" id="show-chances" checked>
+                Show survival chances
+            </label>
+            <label>
+                <input type="checkbox" id="show-map" checked>
+                Show map
+            </label>
+
+            <div class="mini-map" id="map">
+                <p id="map-floor">9th floor</p>
+                <p id="map-place">Starting room</p>
+                <div class="map-box">
+                    <span class="map-dot" id="map-dot"></span>
+                    <div class="map-room map-roof">Roof</div>
+                    <div class="map-room map-stairs">Stairs</div>
+                    <div class="map-room map-workroom">Workroom</div>
+                    <div class="map-room map-elevators">Elevators</div>
+                    <div class="map-room map-windows">Windows</div>
+                    <div class="map-room map-street">Street</div>
+                </div>
+            </div>
+        </aside>
+    </div>
 
     <script src="../scripts/game.js"></script>
 </body>

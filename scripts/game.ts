@@ -15,9 +15,10 @@ type Step =
     "roof" |
     "roofSafe" |
     "window" |
+    "street" |
     "dead";
 
-type DifficultyName = "Easy" | "Normal" | "Hard";
+type DifficultyName = "Easy" | "Normal" | "Hard" | "Challenge";
 
 type Difficulty = {
     name: DifficultyName;
@@ -94,6 +95,13 @@ const difficulties: Difficulty[] = [
         startStamina: 68,
         penalty: 1.55,
         bonus: 0.55
+    },
+    {
+        name: "Challenge",
+        startChance: 35,
+        startStamina: 55,
+        penalty: 1.85,
+        bonus: 0.4
     }
 ];
 
@@ -101,6 +109,7 @@ let playerName: string = "";
 let survival: number = 100;
 let stamina: number = 100;
 let selectedDifficulty: Difficulty = difficulties[1];
+let currentStep: Step = "start";
 
 const game = document.getElementById("game") as HTMLElement;
 const nameBox = document.getElementById("playername") as HTMLElement;
@@ -108,6 +117,12 @@ const chanceBox = document.getElementById("stat-risk") as HTMLElement;
 const staminaBox = document.getElementById("stamina") as HTMLElement;
 const airBox = document.getElementById("air") as HTMLElement;
 const floorBox = document.getElementById("floor") as HTMLElement;
+const showChancesBox = document.getElementById("show-chances") as HTMLInputElement;
+const showMapBox = document.getElementById("show-map") as HTMLInputElement;
+const mapBox = document.getElementById("map") as HTMLElement;
+const mapFloorBox = document.getElementById("map-floor") as HTMLElement;
+const mapPlaceBox = document.getElementById("map-place") as HTMLElement;
+const mapDot = document.getElementById("map-dot") as HTMLElement;
 
 function randomFirstName(): string {
     return firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -183,6 +198,95 @@ function changeStamina(amount: number): void {
     setStamina(stamina + amount);
 }
 
+function shownChange(amount: number): number {
+    if (amount < 0) {
+        return Math.round(amount * selectedDifficulty.penalty);
+    }
+
+    if (amount > 0) {
+        return Math.round(amount * selectedDifficulty.bonus);
+    }
+
+    return amount;
+}
+
+function labelChoice(text: string, change: number): string {
+    if (!showChancesBox.checked) {
+        return text;
+    }
+
+    const amount = shownChange(change);
+    const sign = amount >= 0 ? "+" : "";
+
+    return text + " (" + sign + amount + "%)";
+}
+
+function riskName(change: number, deathText: string, extraRisk: number = 0): string {
+    if (selectedDifficulty.name === "Hard" || selectedDifficulty.name === "Challenge") {
+        return "";
+    }
+
+    const amount = shownChange(change);
+
+    if (deathText !== "" || extraRisk >= 70 || amount <= -45) {
+        return "DEADLY";
+    }
+
+    if (extraRisk >= 38 || amount <= -15) {
+        return "RISKY";
+    }
+
+    if (amount >= 0) {
+        return "RECOMMENDED";
+    }
+
+    return "";
+}
+
+function setChoiceText(button: HTMLButtonElement, text: string, change: number, deathText: string, extraRisk: number = 0): void {
+    const label = document.createElement("span");
+    label.textContent = labelChoice(text, change);
+    button.appendChild(label);
+
+    const risk = riskName(change, deathText, extraRisk);
+
+    if (risk !== "") {
+        const badge = document.createElement("span");
+        badge.className = "risk-badge " + risk.toLowerCase();
+        badge.textContent = risk;
+        button.appendChild(badge);
+    }
+}
+
+function updateMap(place: string, floor: string): void {
+    mapBox.style.display = showMapBox.checked ? "block" : "none";
+    mapPlaceBox.textContent = place;
+    mapFloorBox.textContent = floor;
+
+    if (place === "Roof" || floor === "Roof") {
+        mapDot.style.left = "50%";
+        mapDot.style.top = "16%";
+    } else if (place === "Roof stairs") {
+        mapDot.style.left = "20%";
+        mapDot.style.top = "47%";
+    } else if (place === "Elevators") {
+        mapDot.style.left = "25%";
+        mapDot.style.top = "79%";
+    } else if (place === "Windows") {
+        mapDot.style.left = "70%";
+        mapDot.style.top = "79%";
+    } else if (place === "Street" || floor === "Street") {
+        mapDot.style.left = "50%";
+        mapDot.style.top = "94%";
+    } else if (place === "Other stairs" || place === "Locked stair door") {
+        mapDot.style.left = "20%";
+        mapDot.style.top = "47%";
+    } else {
+        mapDot.style.left = "62%";
+        mapDot.style.top = "47%";
+    }
+}
+
 function randomPercent(): number {
     return Math.random() * 100;
 }
@@ -192,6 +296,10 @@ function riskRoll(extraRisk: number): boolean {
 
     if (selectedDifficulty.name === "Hard") {
         target -= 12;
+    }
+
+    if (selectedDifficulty.name === "Challenge") {
+        target -= 22;
     }
 
     if (selectedDifficulty.name === "Easy") {
@@ -287,7 +395,7 @@ function addSmallText(text: string): void {
 function addChoice(text: string, nextStep: Step, change: number, deathText: string, staminaChange: number = -4, staminaNeeded: number = 0): void {
     const button = document.createElement("button");
     button.className = "choice-button";
-    button.textContent = text;
+    setChoiceText(button, text, change, deathText);
 
     button.onclick = function (): void {
         if (deathText !== "") {
@@ -306,6 +414,30 @@ function addChoice(text: string, nextStep: Step, change: number, deathText: stri
         changeStamina(staminaChange);
 
         randomTrouble(nextStep);
+    };
+
+    game.appendChild(button);
+}
+
+function addRiskChoice(text: string, successStep: Step, change: number, failText: string, staminaChange: number, staminaNeeded: number, extraRisk: number): void {
+    const button = document.createElement("button");
+    button.className = "choice-button";
+    setChoiceText(button, text, change, "", extraRisk);
+
+    button.onclick = function (): void {
+        if (stamina < staminaNeeded) {
+            die("You were too tired to try it. The smoke caught up before you could move.");
+            return;
+        }
+
+        changeChance(change);
+        changeStamina(staminaChange);
+
+        if (riskRoll(extraRisk)) {
+            showStep(successStep);
+        } else {
+            die(failText);
+        }
     };
 
     game.appendChild(button);
@@ -419,12 +551,24 @@ function startNameScreen(): void {
     game.appendChild(button);
 }
 
+showChancesBox.onchange = function (): void {
+    if (playerName !== "") {
+        showStep(currentStep);
+    }
+};
+
+showMapBox.onchange = function (): void {
+    mapBox.style.display = showMapBox.checked ? "block" : "none";
+};
+
 function showStep(which: Step): void {
+    currentStep = which;
     clearGame();
 
     if (which === "start") {
         floorBox.textContent = "9";
         airBox.textContent = "Bad";
+        updateMap("Starting room", "9th floor");
         addTitle("The Fire Starts");
         addText("It is late afternoon. You are on the ninth floor. Someone yells that there is fire below. Smoke is already coming up fast. It smells like hot cloth, machine oil, and burning hair.");
         addSmallText("The fire began on the eighth floor. The ninth floor had very little time.");
@@ -436,10 +580,11 @@ function showStep(which: Step): void {
         addChoice("Look for another stairway.", "greenStreetStairs", -12, "", -10, 0);
         addChoice("Go through the workroom first.", "workroom", -8, "", -7, 0);
         addChoice("Try to get to the roof stairs.", "roofStairs", 8, "", -16, 25);
-        addChoice("Go to the fire escape.", "dead", -60, "The fire escape bent and broke under the crowd. Many workers fell with it.", -20, 25);
+        addRiskChoice("Go to the fire escape.", "street", -60, "The fire escape bent and broke under the crowd. You fell with it.", -20, 25, 75);
     }
 
     if (which === "workroom") {
+        updateMap("Workroom", "9th floor");
         addTitle("Workroom");
         addText("The long tables are still covered with cloth. Some fabric is already burning. The room smells like dye, smoke, and singed hair.");
         addChoice("Grab a wet scrap for your mouth.", "wetCloth", -6, "", -6, 0);
@@ -449,6 +594,7 @@ function showStep(which: Step): void {
     }
 
     if (which === "wetCloth") {
+        updateMap("Workroom", "9th floor");
         addTitle("Wet Cloth");
         addText("You press damp cloth over your mouth. It does not fix the smoke, but it helps enough to move.");
         addChoice("Go toward the roof stairs.", "roofStairs", 8, "", -10, 20);
@@ -456,6 +602,7 @@ function showStep(which: Step): void {
     }
 
     if (which === "helpWorker") {
+        updateMap("Workroom", "9th floor");
         addTitle("Another Worker");
         addText("You pull another worker up from the floor. It costs time, but the two of you move together through the smoke.");
         if (riskRoll(20)) {
@@ -467,6 +614,7 @@ function showStep(which: Step): void {
     }
 
     if (which === "foremanOffice") {
+        updateMap("Office", "9th floor");
         addTitle("Office Door");
         addText("You find a small office. Papers are on the floor. The air is clearer for a moment, but there is no real exit here.");
         addChoice("Use the office to catch your breath.", "roofStairs", 5, "", 10, 0);
@@ -474,14 +622,16 @@ function showStep(which: Step): void {
     }
 
     if (which === "greenStreetStairs") {
+        updateMap("Other stairs", "9th floor");
         addTitle("Other Stairs");
         addText("You reach another stairway, but the smoke is heavy there too. People are coming back up, coughing and scared.");
-        addChoice("Try to go down anyway.", "dead", -100, "You tried to go down through smoke and fire. The stairway filled before you could reach the street.", -18, 20);
+        addRiskChoice("Try to go down anyway.", "street", -45, "You tried to go down through smoke and fire. The stairway filled before you could reach the street.", -18, 20, 60);
         addChoice("Turn around and go up.", "roofStairs", -12, "", -15, 25);
         addChoice("Run for the elevators instead.", "elevator", -18, "", -18, 25);
     }
 
     if (which === "lockedDoor") {
+        updateMap("Locked stair door", "9th floor");
         addTitle("The Door");
         addText("The stair door will not open. Workers push against it, but it is locked or stuck. The smoke is getting worse. Your throat burns when you breathe.");
         addChoice("Keep trying the door.", "lockedDoorMore", -20, "", -12, 0);
@@ -490,23 +640,27 @@ function showStep(which: Step): void {
     }
 
     if (which === "lockedDoorMore") {
+        updateMap("Locked stair door", "9th floor");
         addTitle("Too Much Smoke");
         addText("More people press into the hallway. Nobody can move well. The air is hot and bitter, and people are coughing hard.");
         addChoice("Drop low and crawl back.", "elevator", -15, "", -18, 20);
-        addChoice("Stay by the door.", "dead", -100, "You stayed at the locked stair door too long. The smoke filled the hallway before help could reach you.", -5, 0);
+        addRiskChoice("Stay by the door.", "elevator", -50, "You stayed at the locked stair door too long. The smoke filled the hallway before help could reach you.", -5, 0, 70);
     }
 
     if (which === "elevator") {
+        updateMap("Elevators", "9th floor");
         addTitle("Elevators");
         addText("The elevators are still moving, but everyone is trying to get in. The operators are making dangerous trips through smoke and heat. The metal doors are warm when people hit them.");
         addSmallText("Some workers survived by elevator. Others could not fit or reached it too late.");
         addChoice("Wait your turn and squeeze in.", "elevatorLuck", 5, "", -8, 0);
         addChoice("Push through the crowd.", "elevatorPush", -20, "", -22, 35);
-        addChoice("Try to climb down the elevator shaft.", "dead", -100, "You tried the elevator shaft. It was too dangerous, and there was no safe way down.", -20, 30);
+        addRiskChoice("Jump down the elevator shaft.", "street", -30, "You jumped into the elevator shaft and hit too hard to survive.", -20, 30, 65);
+        addRiskChoice("Slide down the elevator shaft.", "street", 25, "You tried to slide down the elevator shaft, but lost your grip in the smoke and heat.", -26, 40, 38);
         addChoice("Give up and head upward.", "roofStairs", -5, "", -16, 25);
     }
 
     if (which === "elevatorPush") {
+        updateMap("Elevators", "9th floor");
         addTitle("The Crowd");
         addText("Pushing makes people fall and shout. The elevator leaves before you can get inside. The hallway smells like scorched wool and sweat.");
         addChoice("Run to the roof stairs.", "roofStairs", -15, "", -20, 25);
@@ -522,6 +676,7 @@ function showStep(which: Step): void {
     }
 
     if (which === "roofStairs") {
+        updateMap("Roof stairs", "9th floor");
         addTitle("Upward");
         addText("You head upward instead of down. The stairs are crowded, but the air is a little better than the hall. Your eyes water from the smoke.");
         addSmallText("Many people on the tenth floor survived by going to the roof and crossing to nearby buildings.");
@@ -531,6 +686,7 @@ function showStep(which: Step): void {
     }
 
     if (which === "roofCrowd") {
+        updateMap("Roof stairs", "Near roof");
         addTitle("Roof Stairs");
         addText("The stairwell is jammed. People are pushing upward. Smoke is following behind, and every pause feels dangerous.");
         addChoice("Stay low and keep climbing.", "roof", 0, "", -16, 25);
@@ -541,10 +697,11 @@ function showStep(which: Step): void {
     if (which === "roof") {
         floorBox.textContent = "Roof";
         airBox.textContent = "Better";
+        updateMap("Roof", "Roof");
         addTitle("The Roof");
         addText("People are crossing over from the roof toward the next building. It is confusing, but there is space to move. Cold outside air hits your face.");
         addChoice("Follow the crowd across.", "roofSafe", 5, "", -12, 20);
-        addChoice("Stop and wait near the roof door.", "dead", -100, "You waited near the roof door while smoke kept coming up the stairs.", -2, 0);
+        addRiskChoice("Stop and wait near the roof door.", "roofSafe", -45, "You waited near the roof door while smoke kept coming up the stairs.", -2, 0, 65);
     }
 
     if (which === "roofSafe") {
@@ -558,11 +715,19 @@ function showStep(which: Step): void {
     if (which === "window") {
         addTitle("The Windows");
         airBox.textContent = "Smoke";
+        updateMap("Windows", "9th floor");
         addText("The windows give a little air. Down below, people are yelling. The ladders do not reach high enough. Smoke rolls out behind you, and there is a sick burnt smell from the rooms.");
         addSmallText("Many workers went to the windows. Some jumped because the heat behind them felt worse than the fall.");
-        addChoice("Stay at the window and call for help.", "dead", -100, "The ladders could not reach the ninth floor. Waiting at the window did not save you. The smoke and heat kept getting worse.");
+        addRiskChoice("Stay at the window and call for help.", "street", -55, "The ladders could not reach the ninth floor. Waiting at the window did not save you. The smoke and heat kept getting worse.", -5, 0, 82);
         addChoice("Jump.", "dead", -100, "You jumped from the ninth floor. Many workers died this way because there was no safe landing.");
         addChoice("Leave the window and try the stairs again.", "roofStairs", -20, "", -22, 30);
+    }
+
+    if (which === "street") {
+        floorBox.textContent = "Street";
+        airBox.textContent = "Outside";
+        updateMap("Street", "Street");
+        survived("You made it outside. You are hurt and coughing, but alive.");
     }
 
     if (which === "dead") {

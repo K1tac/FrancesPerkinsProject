@@ -54,6 +54,10 @@ input {
     width: 100%;
 }
 
+input[type="checkbox"] {
+    width: auto;
+}
+
 .card {
     background-color: #222222;
     border: 2px solid #333333;
@@ -215,15 +219,125 @@ input {
     color: orange;
 }
 
+.game-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    width: 90%;
+    max-width: 1100px;
+    margin: 40px auto;
+}
+
 .game-main {
     min-height: 300px;
     border: 2px solid #333333;
-    margin: 40px auto;
-    width: 80%;
-    max-width: 800px;
+    width: 100%;
     padding: 25px;
     box-sizing: border-box;
     text-align: center;
+}
+
+.settings-bar {
+    width: 240px;
+    border: 2px solid #333333;
+    padding: 15px;
+    background-color: #202020;
+    box-sizing: border-box;
+}
+
+.settings-bar h2 {
+    color: #cc2222;
+    margin-top: 0;
+}
+
+.settings-bar label {
+    display: block;
+    margin-bottom: 12px;
+}
+
+.mini-map {
+    border-top: 1px solid #444444;
+    margin-top: 15px;
+    padding-top: 10px;
+}
+
+.mini-map p {
+    margin: 5px 0;
+}
+
+.map-box {
+    position: relative;
+    height: 220px;
+    border: 1px solid #444444;
+    margin-top: 10px;
+    background-color: #181818;
+}
+
+.map-room {
+    position: absolute;
+    border: 1px solid #444444;
+    color: #aaaaaa;
+    font-size: 11px;
+    text-align: center;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.map-roof {
+    left: 10%;
+    top: 5%;
+    width: 80%;
+    height: 22%;
+}
+
+.map-stairs {
+    left: 8%;
+    top: 34%;
+    width: 25%;
+    height: 26%;
+}
+
+.map-workroom {
+    left: 38%;
+    top: 34%;
+    width: 54%;
+    height: 26%;
+}
+
+.map-elevators {
+    left: 8%;
+    top: 68%;
+    width: 35%;
+    height: 22%;
+}
+
+.map-windows {
+    left: 50%;
+    top: 68%;
+    width: 42%;
+    height: 22%;
+}
+
+.map-street {
+    left: 10%;
+    top: 93%;
+    width: 80%;
+    height: 0;
+    padding: 0;
+    border-top: 2px solid #444444;
+}
+
+.map-dot {
+    position: absolute;
+    left: 62%;
+    top: 45%;
+    width: 14px;
+    height: 14px;
+    background-color: red;
+    border: 2px solid white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
 }
 
 .game-main h2 {
@@ -232,7 +346,10 @@ input {
 }
 
 .choice-button {
-    display: block;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
     width: 100%;
     margin: 10px 0;
     border: 2px solid #444444;
@@ -243,6 +360,26 @@ input {
 
 .choice-button:hover {
     background-color: #333333;
+}
+
+.risk-badge {
+    font-size: 11px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    color: white;
+    white-space: nowrap;
+}
+
+.recommended {
+    background-color: #2f6b2f;
+}
+
+.risky {
+    background-color: #9b6a17;
+}
+
+.deadly {
+    background-color: #992222;
 }
 
 .small-text {
@@ -265,5 +402,15 @@ input {
 
     .quote {
         display: none;
+    }
+
+    .game-layout {
+        display: block;
+        width: 92%;
+    }
+
+    .settings-bar {
+        width: 100%;
+        margin-top: 15px;
     }
 }
