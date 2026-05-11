@@ -69,6 +69,18 @@ input[type="checkbox"] {
     box-shadow: 0 0 30px black;
 }
 
+.card-seethrough {
+    background: rgba(0, 0, 0, 0.568);
+    backdrop-filter: blur(10px);
+    border: 2px solid #333333;
+    border-radius: 10px;
+    max-width: 390px;
+    width: 100%;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 0 30px black;
+}
+
 .top {
     margin-bottom: 25px;
 }
@@ -130,9 +142,10 @@ input[type="checkbox"] {
 }
 
 .random-button {
-    border: 2px solid #444444;
+    border: 2px solid #8a3535;
     background-color: #222222;
     color: #dddddd;
+    border-radius: 10px;
 }
 
 .random-button:hover {
@@ -146,10 +159,11 @@ input[type="checkbox"] {
 }
 
 .difficulty-button {
-    border: 2px solid #444444;
+    border: 2px solid #8a3535;
     background-color: #222222;
     color: #dddddd;
     width: 100%;
+    border-radius: 10px;
 }
 
 .difficulty-button:hover {
@@ -187,11 +201,12 @@ input[type="checkbox"] {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    background-color: #111111;
-    border-bottom: 2px solid #333333;
+    background-color: #11111175;
+    border-bottom: 2px solid #d10000;
     padding: 15px;
     font-family: Arial, sans-serif;
     gap: 10px;
+    border-radius: 10px;
 }
 
 .game-nav div {
@@ -240,6 +255,7 @@ input[type="checkbox"] {
     padding: 25px;
     box-sizing: border-box;
     text-align: center;
+    border-radius: 10px;
 }
 
 .settings-bar {
@@ -248,6 +264,7 @@ input[type="checkbox"] {
     padding: 15px;
     background-color: #202020;
     box-sizing: border-box;
+    border-radius: 10px;
 }
 
 .settings-bar h2 {
@@ -276,6 +293,7 @@ input[type="checkbox"] {
     border: 1px solid #444444;
     margin-top: 10px;
     background-color: #181818;
+    border-radius: 10px;
 }
 
 .map-room {
@@ -286,6 +304,7 @@ input[type="checkbox"] {
     text-align: center;
     padding: 5px;
     box-sizing: border-box;
+    border-radius: 10px;
 }
 
 .map-roof {
@@ -293,6 +312,7 @@ input[type="checkbox"] {
     top: 5%;
     width: 80%;
     height: 22%;
+    border-radius: 10px;
 }
 
 .map-stairs {
@@ -300,6 +320,7 @@ input[type="checkbox"] {
     top: 34%;
     width: 25%;
     height: 26%;
+    border-radius: 10px;
 }
 
 .map-workroom {
@@ -307,6 +328,7 @@ input[type="checkbox"] {
     top: 34%;
     width: 54%;
     height: 26%;
+    border-radius: 10px;
 }
 
 .map-elevators {
@@ -314,6 +336,7 @@ input[type="checkbox"] {
     top: 68%;
     width: 35%;
     height: 22%;
+    border-radius: 10px;
 }
 
 .map-windows {
@@ -321,6 +344,7 @@ input[type="checkbox"] {
     top: 68%;
     width: 42%;
     height: 22%;
+    border-radius: 10px;
 }
 
 .map-street {
@@ -330,6 +354,7 @@ input[type="checkbox"] {
     height: 0;
     padding: 0;
     border-top: 2px solid #444444;
+    border-radius: 10px;
 }
 
 .map-dot {
@@ -357,10 +382,11 @@ input[type="checkbox"] {
     align-items: center;
     width: 100%;
     margin: 10px 0;
-    border: 2px solid #444444;
+    border: 2px solid #912e2e;
     background-color: #222222;
     color: #dddddd;
     text-align: left;
+    border-radius: 10px;
 }
 
 .choice-button:hover {
@@ -373,6 +399,7 @@ input[type="checkbox"] {
     border-radius: 4px;
     color: white;
     white-space: nowrap;
+    border-radius: 10px;
 }
 
 .recommended {
@@ -394,6 +421,11 @@ input[type="checkbox"] {
 
 .survived {
     border-color: #335533;
+}
+
+.background-thing {
+    background-image: url(../assets/fire.webp);
+    background-size: cover;
 }
 
 @media (max-width: 600px) {
